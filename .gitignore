@@ -10,6 +10,15 @@
 /[Ll]ogs/
 /[Mm]emoryCaptures/
 
+# Cri
+/Assets/Gizmos/CriWare*
+/Assets/Editor/CriWare*
+/Assets/Plugins/CriWare*
+/Assets/Plugins/cri_ware_unity.bundle*
+/Assets/Plugins/Android*
+/Assets/Plugins/iOS*
+/Assets/Plugins/x86*
+
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
 
