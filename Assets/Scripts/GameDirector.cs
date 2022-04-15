@@ -26,12 +26,12 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         }
             
         // ˆÚ“®ˆ—
-        if(_isGenerated)
-        {
-            float speedPerFrame = Player.Instance.highSpeed * Time.deltaTime * -1;
-            foreach(GameObject note in NotesManager.Instance.notes)
-                note.transform.Translate(new Vector3(0, 0, speedPerFrame));
-        }
+        //if(_isGenerated)
+        //{
+        //    float speedPerFrame = Player.Instance.highSpeed * Time.deltaTime * -1;
+        //    foreach(GameObject note in NotesManager.Instance.notes)
+        //        note.transform.Translate(new Vector3(0, 0, speedPerFrame));
+        //}
     }
 
     private void GetTapTime()

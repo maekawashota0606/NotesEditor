@@ -11,15 +11,15 @@ public class MeshDrawer : SingletonMonoBehaviour<MeshDrawer>
     {
         _meshMaterial.SetPass(0);
 
-        foreach (Bar bar in DataManager.Instance.barList)
-        {
-            for (int i = 0; i < DataManager.MAX_LANE; i++)
-                for (int j = 0; j < DataManager.MAX_LPB; j++)
-                {
-                    if (0 < bar.notesArray[i, j].notesType)
-                        DrawNote(bar.notesArray[i, j].pos, 1, 0.2f);
-                }
-        }
+        //foreach (Bar bar in DataManager.Instance.barList)
+        //{
+        //    for (int i = 0; i < DataManager.MAX_LANE; i++)
+        //        for (int j = 0; j < DataManager.MAX_LPB; j++)
+        //        {
+        //            if (0 < bar.notesArray[i, j].notesType)
+        //                DrawNote(bar.notesArray[i, j].pos, 1, 0.2f);
+        //        }
+        //}
     }
 
     public void DrawNote(Vector3 pos, float height, float width)

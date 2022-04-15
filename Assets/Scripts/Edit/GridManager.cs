@@ -11,23 +11,37 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
     [SerializeField]
     private Material _highlightMat = null;
     private Vector3 _gridOffset = new Vector3(0, -0.5f);
-    //
-    private float _lineEndX = 0;
+    // 
     private Vector3 _lineOrigin = Vector3.zero;
     private Vector3 _lineEnd = Vector3.zero;
+    //
+    private Vector3 _HLLeftTop = Vector3.zero;
+    private Vector3 _HLRightBottom = Vector3.zero;
+
 
     private void OnRenderObject()
     {
-        // TODO:必要なタイミングのみ実行
-        CalBarOrigin();
-        //
         DrawHorizontalLine();
-        DrawVerticalLine();
+        DrawVerticalLines();
         BarHighLight(DataManager.Instance.choosingBarNum);
     }
 
+
+    /// <summary>
+    /// 始点と終点の2点間を結ぶ1本の線を引く
+    /// </summary>
+    /// <param name="origin"></param>
+    /// <param name="end"></param>
     private void DrawLine(Vector3 origin, Vector3 end)
     {
+        // オフセット、拡大率を考慮
+        origin *= DataManager.Instance.stretchRatio;
+        origin += _gridOffset;
+        end *= DataManager.Instance.stretchRatio;
+        end += _gridOffset;
+
+
+        // 描画
         GL.PushMatrix();
         GL.MultMatrix(transform.localToWorldMatrix);
         GL.Begin(GL.LINES);
@@ -37,76 +51,92 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
         GL.PopMatrix();
     }
 
-    public void DrawVerticalLine()
+
+    public void DrawVerticalLines()
     {
-        float verticalY = -DataManager.Instance.lane * DataManager.Instance.stretchRatio.y;
-        foreach (Bar bar in DataManager.Instance.barList)
+        float y = -DataManager.Instance.lane;
+        foreach (BarData bar in DataManager.Instance.barList)
         {
-            bool isStartLine = true;
-            foreach(float x in bar.verticalLinePosXList)
+            // 1拍づつ調べる
+            for(int i = 0; i < bar.LPB; i++)
             {
-                if(isStartLine)
-                {
-                    isStartLine = false;
+                // 小節線を強調表示
+                if (i == 0)
                     _lineMaterialRed.SetPass(0);
-                }
                 else
                     _lineMaterial.SetPass(0);
 
+                // Vector3に格納して関数に渡す
+                // 始点
                 _lineOrigin = Vector3.zero;
-                _lineOrigin.x = (bar.origin.x + x) * DataManager.Instance.stretchRatio.x;
+                // 0番レーンのみ調べる(レーンによって拍の長さが変わることはないため)
+                _lineOrigin.x = bar.notesArray[0, i].time;
+                // 終点
                 _lineEnd = _lineOrigin;
-                _lineEnd.y += verticalY;
-                DrawLine(_lineOrigin + _gridOffset, _lineEnd + _gridOffset);
+                // レーンの数だけ下に伸ばす
+                _lineEnd.y += y;
+                DrawLine(_lineOrigin, _lineEnd);
+                //Debug.Log(bar.notesArray[0, i].time);
             }
         }
 
         // 最後のBarを描画
-        _lineOrigin = Vector3.zero;
-        _lineOrigin.x = _lineEndX;
-        _lineEnd = _lineOrigin;
-        _lineEnd.y += verticalY;
-        DrawLine(_lineOrigin + _gridOffset, _lineEnd + _gridOffset);
+        //DrawLine(_lineOrigin + _gridOffset, _lineEnd + _gridOffset);
     }
+
 
     public void DrawHorizontalLine()
     {
-        float horizontalX = 0;
-        foreach (Bar bar in DataManager.Instance.barList)
-            horizontalX += bar.barDuration;
-        horizontalX *= DataManager.Instance.stretchRatio.x;
-        // 縦線描画に使用
-        _lineEndX = horizontalX;
+        if (DataManager.Instance.barList.Count < 1)
+            return;
+
+        int lastBarIdx = DataManager.Instance.barList.Count - 1;
+        int lastNoteIdx = DataManager.Instance.barList[lastBarIdx].LPB - 1;
+        // 最後の拍が来る時間を取得
+        float x = DataManager.Instance.barList[lastBarIdx].notesArray[0, lastNoteIdx].time;
 
         _lineMaterial.SetPass(0);
         // 1レーンまとめて描画(小節ごとに分けない)
         for (int i = 0; i < DataManager.Instance.lane + 1; i++)
         {
-            float horizontalY = -i * DataManager.Instance.stretchRatio.y;
+            // Vector3に格納して関数に渡す
+            // 始点
             _lineOrigin.x = 0;
-            _lineOrigin.y = horizontalY;
-            _lineEnd.x = horizontalX;
-            _lineEnd.y = horizontalY;
-            DrawLine(_lineOrigin + _gridOffset, _lineEnd + _gridOffset);
+            _lineOrigin.y = -i;
+            // 終点
+            _lineEnd = _lineOrigin;
+            _lineEnd.x = x;
+            DrawLine(_lineOrigin, _lineEnd);
         }
     }
 
+    /// <summary>
+    /// 選択中の小節を強調表示
+    /// </summary>
     private void BarHighLight(int idx)
     {
         if (idx < 0)
             return;
 
-        _highlightMat.SetPass(0);
-        Vector3 leftTop = Vector3.Scale(DataManager.Instance.barList[idx].origin, DataManager.Instance.stretchRatio);
-        //
-        Vector3 rightBottom = leftTop;
-        rightBottom.x += DataManager.Instance.barList[idx].barDuration * DataManager.Instance.stretchRatio.x;
-        rightBottom.y = -DataManager.Instance.lane * DataManager.Instance.stretchRatio.y;
 
-        DrawLine(leftTop + _gridOffset, new Vector3(leftTop.x, rightBottom.y, 0) + _gridOffset);
-        DrawLine(leftTop + _gridOffset, new Vector3(rightBottom.x, 0, 0) + _gridOffset);
-        DrawLine(new Vector3(rightBottom.x, leftTop.y) + _gridOffset, rightBottom + _gridOffset);
-        DrawLine(new Vector3(leftTop.x, rightBottom.y, 0) + _gridOffset, rightBottom + _gridOffset);
+        //矩形の4辺を描画
+        _highlightMat.SetPass(0);
+        _lineOrigin = _HLLeftTop;
+        _lineEnd.x = _HLRightBottom.x;
+        _lineEnd.y = _HLLeftTop.y;
+        DrawLine(_lineOrigin, _lineEnd);
+        _lineOrigin.x = _HLLeftTop.x;
+        _lineOrigin.y = _HLRightBottom.y;
+        _lineEnd = _HLRightBottom;
+        DrawLine(_lineOrigin, _lineEnd);
+        _lineOrigin = _HLLeftTop;
+        _lineEnd.x = _HLLeftTop.x;
+        _lineEnd.y = _HLRightBottom.y;
+        DrawLine(_lineOrigin, _lineEnd);
+        _lineOrigin.x = _HLRightBottom.x;
+        _lineOrigin.y = _HLLeftTop.y;
+        _lineEnd = _HLRightBottom;
+        DrawLine(_lineOrigin, _lineEnd);
     }
 
     /// <summary>
@@ -116,57 +146,113 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
     /// <returns>選択中の小節番号(非選択なら-1)</returns>
     public int CheckHitBar(Vector3 clickPos)
     {
-        float bottom = -(DataManager.Instance.lane) * DataManager.Instance.stretchRatio.y;
+        // 上辺のy座標(固定)
+        float top = 0;
+        // 底辺のy座標(固定)
+        float bottom = -DataManager.Instance.lane;
+        // 1つ前の小節の合計の長さ
+        float lastTotalLength = 0;
 
-        foreach (Bar bar in DataManager.Instance.barList)
+
+        // 1小節づつチェック
+        foreach (BarData bar in DataManager.Instance.barList)
         {
-            Vector3 leftTop = Vector3.Scale(bar.origin, DataManager.Instance.stretchRatio);
-            Vector3 rightBottom = leftTop;
-            // 半マスずらす
-            leftTop.x -= bar.notesDuration[0] / 2 * DataManager.Instance.stretchRatio.x;
-            float right = (bar.barDuration - bar.notesDuration[bar.LPB - 1] / 2) * DataManager.Instance.stretchRatio.x ;
+            // この小節を含めたこれまでの小節の合計の長さ
+            float totalLength = 0;
+            // この小節の長さ
+            float length = 0;
+            for (int i = 0; i < bar.LPB; i++)
+                length += bar.notesArray[0, i].length;
+            
+            totalLength = lastTotalLength + length;
 
-            rightBottom.x += right;
-            rightBottom.y += bottom;
-            if(IsHitSquareAndDot(clickPos, leftTop + _gridOffset, rightBottom + _gridOffset))
+            //矩形の2点の座標を求める
+            Vector3 leftTop = new Vector3(lastTotalLength, top);
+            Vector3 rightBottom = new Vector3(totalLength, bottom);
+
+
+            // ヒットしたなら
+            if (IsHitSquareAndDot(clickPos, leftTop, rightBottom))
+            {
+                // ハイライト用
+                _HLLeftTop = leftTop;
+                _HLRightBottom = rightBottom;
+
                 return bar.barNum;
+            }
+
+            // ヒットしなければ次の小節を調べる
+            lastTotalLength = totalLength;
         }
 
+        // 該当なし
         return -1;
     }
 
+    /// <summary>
+    /// 指定した小節のどのマスにヒットしたか判定
+    /// </summary>
+    /// <param name="clickPos"></param>
+    /// <param name="idx"></param>
+    /// <param name="lane"></param>
+    /// <param name="cell"></param>
     public void CheckHitCell(Vector3 clickPos, int idx, out int lane, out int cell)
     {
-        lane = -1;
-        cell = -1;
-        for(int i = 0; i < DataManager.Instance.lane; i++)
+        // 1レーンごとに調べる
+        for (int i = 0; i < DataManager.Instance.lane; i++)
         {
-            Vector3 leftTop = DataManager.Instance.barList[idx].origin;
-            leftTop.x *= DataManager.Instance.stretchRatio.x;
-            leftTop.y *= -DataManager.Instance.stretchRatio.y;
-            Vector3 rightBottom = leftTop;
-            rightBottom.y += -DataManager.Instance.stretchRatio.y * (i + 1);
+            // 上辺のy座標
+            float top = i * -1;
+            // 底辺のy座標
+            float bottom = (i + 1) * -1;
 
+
+            // 1拍づつ判定
             for (int j = 0; j < DataManager.Instance.barList[idx].LPB; j++)
             {
-                int backIdx = DataManager.Instance.barList[idx].LPB - j - 1;
-                // トータルの長さ - 後ろから数えてj + 1番目のライン座標x
-                Vector3 rightBottoms = rightBottom;
-                rightBottoms.x += (DataManager.Instance.barList[idx].barDuration - DataManager.Instance.barList[idx].verticalLinePosXList[backIdx]) * DataManager.Instance.stretchRatio.x;
+                // 左辺のx座標(この拍が来る時間)
+                float left = DataManager.Instance.barList[idx].notesArray[i, j].time;
+                // 右辺のx座標(この拍が来る時間 + この拍の長さ = この拍の終わり)
+                float right = left + DataManager.Instance.barList[idx].notesArray[i, j].length;
 
-                if (IsHitSquareAndDot(clickPos, leftTop + _gridOffset, rightBottoms + _gridOffset))
+                // 2点の座標をセット
+                Vector3 leftTop = new Vector3(left, top);
+                Vector3 rightBottom = new Vector3(right, bottom);
+
+
+                // 接触しているならレーンと座標を返す
+                if (IsHitSquareAndDot(clickPos, leftTop, rightBottom))
                 {
                     lane = i;
                     cell = j;
-                    Debug.Log(lane + "," + cell);
+                    //Debug.Log(lane + "," + cell);
+
                     return;
                 }
             }
         }
+
+        // 何れにもヒットしなかった場合
+        lane = -1;
+        cell = -1;
     }
 
+
+    /// <summary>
+    /// 点と矩形の当たり判定をとる
+    /// </summary>
+    /// <param name="clickPos"></param>
+    /// <param name="leftTop"></param>
+    /// <param name="rightBottom"></param>
+    /// <returns></returns>
     private bool IsHitSquareAndDot(Vector3 clickPos, Vector3 leftTop, Vector3 rightBottom)
     {
+        // オフセット、拡大率を考慮
+        leftTop *= DataManager.Instance.stretchRatio;
+        leftTop += _gridOffset;
+        rightBottom *= DataManager.Instance.stretchRatio;
+        rightBottom += _gridOffset;
+
         // xが範囲内でなければ
         if ((clickPos.x < leftTop.x) || (rightBottom.x < clickPos.x))
             return false;
@@ -175,20 +261,5 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
             return false;
 
         return true;
-    }
-
-    private void CalBarOrigin()
-    {
-        float totalX = 0;
-        for(int i = 0; i < DataManager.Instance.barList.Count; i++)
-        {
-            Bar bar = DataManager.Instance.barList[i];
-            float x = bar.barDuration;
-            //
-            bar.origin = new Vector3(totalX, 0, 0);
-            DataManager.Instance.ChangeBarData(bar);
-            //
-            totalX += x;
-        }
     }
 }

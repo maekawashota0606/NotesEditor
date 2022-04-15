@@ -47,7 +47,7 @@ public class NotesGenerator : SingletonMonoBehaviour<NotesGenerator>
                 // ç¿ïWÇåàíË
                 float notesPosZ = note.frame * Player.Instance.highSpeed;
                 noteObj.transform.position = new Vector3(_setPosition[note.lane].transform.position.x, 0, notesPosZ);
-                NotesManager.Instance.notes.Add(noteObj);
+                //NotesManager.Instance.notes.Add(noteObj);
             }
         }
         else

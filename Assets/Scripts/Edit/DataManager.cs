@@ -17,20 +17,20 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
     public string musicPath = string.Empty;
     public float BPM = 150;
     public float offset = 0;
-    public Bar.Measure measure = new Bar.Measure(4, 4);
+    public BarData.Measure measure = new BarData.Measure(4, 4);
     public int LPB = 16;
     public int lane = 7;
     public int editMode = 0;
     //
     public int choosingBarNum = -1;
-    public List<Bar> barList = new List<Bar>(MAX_BAR);
+    public List<BarData> barList = new List<BarData>(MAX_BAR);
 
     public void AddBarList()
     {
         if (MAX_BAR < barList.Count)
             return;
 
-        Bar bar = new Bar();
+        BarData bar = new BarData();
         bar.Init(barList.Count, measure, LPB);
         barList.Add(bar);
 
@@ -38,7 +38,7 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
         barList.Sort((a, b) => a.barNum - b.barNum);
     }
 
-    public void ChangeBarData(Bar bar)
+    public void ChangeBarData(BarData bar)
     {
         barList[bar.barNum] = bar;
     }
@@ -69,7 +69,7 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
         if (choosingBarNum < 0)
             return;
 
-        Bar bar = barList[choosingBarNum];
+        BarData bar = barList[choosingBarNum];
         bar.Init(choosingBarNum, measure, LPB);
         ChangeBarData(bar);
     }
@@ -85,6 +85,6 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
         else
             barList[choosingBarNum].notesArray[lane, cell].notesType = 0;
 
-        barList[choosingBarNum].SetNotePos(lane, cell);
+        //barList[choosingBarNum].SetNotePos(lane, cell);
     }
 }

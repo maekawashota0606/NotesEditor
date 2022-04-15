@@ -1,19 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Bar
+/// <summary>
+/// 小節データクラス
+/// </summary>
+public class BarData
 {
+    /// <summary>
+    /// 小節番号
+    /// </summary>
     public int barNum = 0;
+    /// <summary>
+    /// 拍子
+    /// </summary>
     public Measure measure = new Measure();
+    /// <summary>
+    /// 1小節の分割数
+    /// </summary>
     public int LPB = 0;
-    //
+    /// <summary>
+    /// 編集中のノーツデータ(空も含む)
+    /// </summary>
     public NotesData.Note[,] notesArray = new NotesData.Note[DataManager.MAX_LANE, DataManager.MAX_LPB];
-    public Vector3 origin  = Vector3.zero;
 
-    public float barDuration = 0;
-    public List<float> verticalLinePosXList = new List<float>(DataManager.MAX_LPB);
-    public List<float> notesDuration = new List<float>(DataManager.MAX_LPB);
+    // いる？
+    //public Vector3 origin  = Vector3.zero;
+    //public float barDuration = 0;
+    //public List<float> verticalLinePosXList = new List<float>(DataManager.MAX_LPB);
+    //public List<float> notesDuration = new List<float>(DataManager.MAX_LPB);
 
     public struct Measure
     {
@@ -31,39 +42,9 @@ public class Bar
         barNum = num;
         measure = m;
         LPB = lpb;
-        origin = Vector3.zero;
+        //origin = Vector3.zero;
         notesArray = new NotesData.Note[DataManager.MAX_LANE, DataManager.MAX_LPB];
-        CalBar();
-    }
 
-    private void CalBar()
-    {
-        barDuration = 60 / DataManager.Instance.BPM * 4 * measure.numerator / measure.denominator;
-        //
-        verticalLinePosXList.Clear();
-        notesDuration.Clear();
-        for(int i = 0; i < LPB; i++)
-        {
-            // 本来は1拍単位で計算
-            float x = barDuration / LPB * i;
-            verticalLinePosXList.Add(origin.x + x);
-        }
-
-        // LPBの幅を計算
-        float lastduration = 0;
-        for (int i = 0; i < LPB; i++)
-        {
-            int backIdx = LPB - i - 1;
-            float duration = barDuration - verticalLinePosXList[backIdx];
-            notesDuration.Add(duration - lastduration);
-            lastduration = duration;
-        }
-    }
-
-    public void SetNotePos(int lane, int cell)
-    {
-        Vector3 pos = origin + new Vector3(DataManager.Instance.barList[DataManager.Instance.choosingBarNum].verticalLinePosXList[cell], -lane - 1);
-        pos *= DataManager.Instance.stretchRatio;
-        DataManager.Instance.barList[DataManager.Instance.choosingBarNum].notesArray[lane, cell].pos = pos;
+        // ノーツのタイミングを再計算
     }
 }

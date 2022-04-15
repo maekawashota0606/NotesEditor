@@ -8,6 +8,9 @@ public class InputReceptor : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            // TODO:適切なタイミングで
+            NotesManager.Instance.CalNotes();
+
             Vector3 mousePos = Input.mousePosition;
             // zを正しく指定し直す(なぜか反転)
             mousePos.z = EditCameraController.Instance.gameObject.transform.position.z * -1;
@@ -15,6 +18,7 @@ public class InputReceptor : MonoBehaviour
             // 
             int lastBarNum = DataManager.Instance.choosingBarNum;
             DataManager.Instance.choosingBarNum = GridManager.Instance.CheckHitBar(mousePos);
+
             // 非選択なら前回の番号へ
             if (-1 < DataManager.Instance.choosingBarNum)
             {
