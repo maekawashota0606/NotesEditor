@@ -6,11 +6,11 @@ public class InputReceptor : MonoBehaviour
 {
     private void Update()
     {
+        // 必要なタイミングで
+        NotesManager.Instance.CalNotes();
+
         if (Input.GetMouseButtonDown(0))
         {
-            // TODO:適切なタイミングで
-            NotesManager.Instance.CalNotes();
-
             Vector3 mousePos = Input.mousePosition;
             // zを正しく指定し直す(なぜか反転)
             mousePos.z = EditCameraController.Instance.gameObject.transform.position.z * -1;
@@ -25,11 +25,13 @@ public class InputReceptor : MonoBehaviour
                 // すでに選択中の小節なら
                 if (DataManager.Instance.choosingBarNum == lastBarNum)
                 {
-                    int lane = -1;
-                    int cell = -1;
+                    int lane, cell;
                     GridManager.Instance.CheckHitCell(mousePos, DataManager.Instance.choosingBarNum, out lane, out cell);
 
-                    // メッシュを追加
+
+                    if (lane < 0 || cell < 0)
+                        return;
+
                     DataManager.Instance.AddNotes(lane, cell);
                 }
                 else

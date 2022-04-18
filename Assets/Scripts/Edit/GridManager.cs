@@ -10,7 +10,7 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
     private Material _lineMaterialRed = null;
     [SerializeField]
     private Material _highlightMat = null;
-    private Vector3 _gridOffset = new Vector3(0, -0.5f);
+    public Vector3 gridOffset = new Vector3(0, -0.5f);
     // 
     private Vector3 _lineOrigin = Vector3.zero;
     private Vector3 _lineEnd = Vector3.zero;
@@ -36,9 +36,9 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
     {
         // オフセット、拡大率を考慮
         origin *= DataManager.Instance.stretchRatio;
-        origin += _gridOffset;
+        origin += gridOffset;
         end *= DataManager.Instance.stretchRatio;
-        end += _gridOffset;
+        end += gridOffset;
 
 
         // 描画
@@ -249,9 +249,9 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
     {
         // オフセット、拡大率を考慮
         leftTop *= DataManager.Instance.stretchRatio;
-        leftTop += _gridOffset;
+        leftTop += gridOffset;
         rightBottom *= DataManager.Instance.stretchRatio;
-        rightBottom += _gridOffset;
+        rightBottom += gridOffset;
 
         // xが範囲内でなければ
         if ((clickPos.x < leftTop.x) || (rightBottom.x < clickPos.x))

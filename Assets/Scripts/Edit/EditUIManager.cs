@@ -24,7 +24,7 @@ public class EditUIManager : SingletonMonoBehaviour<EditUIManager>
     [SerializeField]
     private Scrollbar _verticalBar = null;
     [SerializeField]
-    private GameObject _addButton = null;
+    private Slider _playSlider = null;
 
     private void Start()
     {
@@ -43,10 +43,17 @@ public class EditUIManager : SingletonMonoBehaviour<EditUIManager>
 
     public void SetPath()
     {
+#if UNITY_EDITOR
+        _pathField.text = "sample.wav";
+#endif
+
         if (_pathField.text == string.Empty)
             _pathField.text = DataManager.MUSIC_PATH_HEAD;
         else
             DataManager.Instance.musicPath = _pathField.text;
+
+        // 
+        StartCoroutine(AudioManager.Instance.SetAudioFile(DataManager.Instance.musicPath));
     }
 
     public void SetBPM()
@@ -145,5 +152,21 @@ public class EditUIManager : SingletonMonoBehaviour<EditUIManager>
     public void AddBar()
     {
         DataManager.Instance.AddBarList();
+    }
+
+    public void OnPushPlayButton()
+    {
+        GameDirector.Instance.Play();
+    }
+
+    public void SetPlaySlider(float time,  float duration)
+    {
+        _playSlider.value = time / duration;
+    }
+
+    public void OnChangedPlaySlider()
+    {
+        // スライダーの進捗率が変更された際に反映
+        GameDirector.Instance.Skip(_playSlider.value);
     }
 }

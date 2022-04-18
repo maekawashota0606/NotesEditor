@@ -16,27 +16,8 @@ public class NotesManager : SingletonMonoBehaviour<NotesManager>
         {
             CalLaneNotes(i);
         }
-
-        //
-        //verticalLinePosXList.Clear();
-        //notesDuration.Clear();
-        //for (int i = 0; i < LPB; i++)
-        //{
-        //    // –{—ˆ‚Í1”’PˆÊ‚ÅŒvŽZ
-        //    float x = barDuration / LPB * i;
-        //    verticalLinePosXList.Add(origin.x + x);
-        //}
-
-        //// LPB‚Ì•‚ðŒvŽZ
-        //float lastduration = 0;
-        //for (int i = 0; i < LPB; i++)
-        //{
-        //    int backIdx = LPB - i - 1;
-        //    float duration = barDuration - verticalLinePosXList[backIdx];
-        //    notesDuration.Add(duration - lastduration);
-        //    lastduration = duration;
-        //}
     }
+
 
     private void CalLaneNotes(int lane)
     {
@@ -62,11 +43,4 @@ public class NotesManager : SingletonMonoBehaviour<NotesManager>
             }
         }
     }
-
-    //public void SetNotePos(int lane, int cell)
-    //{
-    //    Vector3 pos = origin + new Vector3(DataManager.Instance.barList[DataManager.Instance.choosingBarNum].verticalLinePosXList[cell], -lane - 1);
-    //    pos *= DataManager.Instance.stretchRatio;
-    //    //DataManager.Instance.barList[DataManager.Instance.choosingBarNum].notesArray[lane, cell].pos = pos;
-    //}
 }

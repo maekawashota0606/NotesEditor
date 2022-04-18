@@ -11,6 +11,7 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
     public const int MAX_LANE = 16;
     public const int MAX_BAR = 300;
     public const string MUSIC_PATH_HEAD = "Hoge/Foo/Huga/";
+
     // ユーザー設定変数
     public int targetFrameRate = 60;
     public Vector2 stretchRatio = new Vector2(1, 1);
@@ -20,8 +21,9 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
     public BarData.Measure measure = new BarData.Measure(4, 4);
     public int LPB = 16;
     public int lane = 7;
-    public int editMode = 0;
-    //
+    public int editMode = 1;
+
+    // 選択中の小節(非選択なら-1)
     public int choosingBarNum = -1;
     public List<BarData> barList = new List<BarData>(MAX_BAR);
 
@@ -76,15 +78,10 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
 
     public void AddNotes(int lane, int cell)
     {
-        if (lane < 0 || cell < 0)
-            return;
-
         //
-        if (barList[choosingBarNum].notesArray[lane, cell].notesType == 0)
-            barList[choosingBarNum].notesArray[lane, cell].notesType = 1;
-        else
+        if (barList[choosingBarNum].notesArray[lane, cell].notesType == editMode)
             barList[choosingBarNum].notesArray[lane, cell].notesType = 0;
-
-        //barList[choosingBarNum].SetNotePos(lane, cell);
+        else
+            barList[choosingBarNum].notesArray[lane, cell].notesType = editMode;
     }
 }
