@@ -22,7 +22,7 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
     public int LPB = 16;
     public int lane = 7;
     public int editMode = 1;
-
+    public float time = 0;
     // ‘I‘ğ’†‚Ì¬ß(”ñ‘I‘ğ‚È‚ç-1)
     public int choosingBarNum = -1;
     public List<BarData> barList = new List<BarData>(MAX_BAR);

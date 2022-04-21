@@ -24,6 +24,7 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
         DrawHorizontalLine();
         DrawVerticalLines();
         BarHighLight(DataManager.Instance.choosingBarNum);
+        DrawTimeLine(DataManager.Instance.time);
     }
 
 
@@ -49,6 +50,22 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
         GL.Vertex3(end.x, end.y, end.z);
         GL.End();
         GL.PopMatrix();
+    }
+
+
+    private void DrawTimeLine(float time)
+    {
+        _lineOrigin = Vector3.zero;
+        _lineOrigin.x = time;
+        _lineEnd = _lineOrigin;
+
+        // Œ©Ø‚ê‚é’·‚³‚ğ“K“–‚Éw’è
+        _lineOrigin.y = 5;
+        _lineEnd.y = -30;
+
+        //
+        _lineMaterialRed.SetPass(0);
+        DrawLine(_lineOrigin, _lineEnd);
     }
 
 

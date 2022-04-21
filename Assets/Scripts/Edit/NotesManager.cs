@@ -5,12 +5,6 @@ public class NotesManager : SingletonMonoBehaviour<NotesManager>
     /// </summary>
     public void CalNotes()
     {
-        // test
-        //DataManager.Instance.BPM = 240;
-        //DataManager.Instance.AddBarList();
-        //DataManager.Instance.AddBarList();
-        //DataManager.Instance.barList[0].LPB = 16;
-
         // ƒŒ[ƒ“‚²‚Æ‚ÉŒvZ
         for(int i = 0; i < DataManager.Instance.lane; i++)
         {

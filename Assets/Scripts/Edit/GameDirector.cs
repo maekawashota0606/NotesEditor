@@ -5,8 +5,6 @@ using UnityEngine;
 public class GameDirector : SingletonMonoBehaviour<GameDirector>
 {
     public GameState state = GameState.Edit;
-    // Ä¶ŠÔ‹L‰¯
-    private float _passedTime = 0;
     private float _cue = -1;
     private float _duration = 0;
 
@@ -16,6 +14,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         Playing
         //Option
     }
+
 
     public void Play()
     {
@@ -30,10 +29,10 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
         // “r’†‚©‚çÄ¶
         if (0 <= _cue)
-            _passedTime = _cue;
+            DataManager.Instance.time = _cue;
 
         // Ä¶
-        if (AudioManager.Instance.PlayMusic(_passedTime))
+        if (AudioManager.Instance.PlayMusic(DataManager.Instance.time))
         {
             state = GameState.Playing;
             StartCoroutine(OnPlaying());
@@ -45,25 +44,31 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     {
         while(state == GameState.Playing)
         {
-            if (_duration < _passedTime)
+            if (_duration < DataManager.Instance.time)
                 state = GameState.Edit;
 
-            _passedTime += Time.deltaTime;
-            EditUIManager.Instance.SetPlaySlider(_passedTime, _duration);
+            DataManager.Instance.time += Time.deltaTime;
+            EditUIManager.Instance.SetPlaySlider(DataManager.Instance.time, _duration);
 
             yield return null;
         }
     }
+
 
     public void Skip(float ratio)
     {
         if (state == GameState.Edit)
         {
             _cue = _duration * ratio;
+            DataManager.Instance.time = _cue;
         }
     }
 
 
+    /// <summary>
+    /// ‹È‚Ì’·‚³‚ğŒŸ’m
+    /// </summary>
+    /// <param name="d"></param>
     public void SetDuration(float d)
     {
         _duration = d;
