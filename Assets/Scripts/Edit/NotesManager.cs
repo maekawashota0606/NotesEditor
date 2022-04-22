@@ -26,7 +26,8 @@ public class NotesManager : SingletonMonoBehaviour<NotesManager>
                 // 計算後のデータを代入
                 NotesData.Note note = DataManager.Instance.barList[barData.barNum].notesArray[lane, i];
                 note.length = length;
-                note.time = totalTime;
+                //
+                note.time = DataManager.Instance.offset + totalTime;
                 //
                 // TODO:フレームを計算
                 //

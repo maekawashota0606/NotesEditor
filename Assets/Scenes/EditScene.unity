@@ -1394,7 +1394,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _pathField: {fileID: 665664707}
   _BPMField: {fileID: 649822583}
-  _offsetField: {fileID: 0}
+  _offsetField: {fileID: 706305543}
   _denominatorField: {fileID: 1050246145}
   _numeratorField: {fileID: 1495783203}
   _LPBField: {fileID: 1286682563}
@@ -2279,7 +2279,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 458456031}
         m_TargetAssemblyTypeName: EditUIManager, Assembly-CSharp
-        m_MethodName: SetBPM
+        m_MethodName: SetOffset
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -14,9 +14,6 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
     // 
     private Vector3 _lineOrigin = Vector3.zero;
     private Vector3 _lineEnd = Vector3.zero;
-    //
-    private Vector3 _HLLeftTop = Vector3.zero;
-    private Vector3 _HLRightBottom = Vector3.zero;
 
 
     private void OnRenderObject()
@@ -40,7 +37,6 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
         origin += gridOffset;
         end *= DataManager.Instance.stretchRatio;
         end += gridOffset;
-
 
         // 描画
         GL.PushMatrix();
@@ -69,7 +65,7 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
     }
 
 
-    public void DrawVerticalLines()
+    private void DrawVerticalLines()
     {
         float y = -DataManager.Instance.lane;
         foreach (BarData bar in DataManager.Instance.barList)
@@ -102,7 +98,7 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
     }
 
 
-    public void DrawHorizontalLine()
+    private void DrawHorizontalLine()
     {
         if (DataManager.Instance.barList.Count < 1)
             return;
@@ -127,6 +123,7 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
         }
     }
 
+
     /// <summary>
     /// 選択中の小節を強調表示
     /// </summary>
@@ -135,26 +132,29 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
         if (idx < 0)
             return;
 
+        float left = DataManager.Instance.barList[idx].notesArray[0, 0].time;
+        float right = DataManager.Instance.barList[idx].notesArray[0, DataManager.Instance.barList[idx].LPB - 1].time + DataManager.Instance.barList[idx].notesArray[0, DataManager.Instance.barList[idx].LPB - 1].length;
+        float top = 0;
+        float bottom = -DataManager.Instance.lane;
 
         //矩形の4辺を描画
         _highlightMat.SetPass(0);
-        _lineOrigin = _HLLeftTop;
-        _lineEnd.x = _HLRightBottom.x;
-        _lineEnd.y = _HLLeftTop.y;
+        _lineOrigin.x = left;
+        _lineOrigin.y = top;
+        _lineEnd.x = right;
+        _lineEnd.y = top;
         DrawLine(_lineOrigin, _lineEnd);
-        _lineOrigin.x = _HLLeftTop.x;
-        _lineOrigin.y = _HLRightBottom.y;
-        _lineEnd = _HLRightBottom;
+        _lineOrigin.x = right;
+        _lineOrigin.y = bottom;
         DrawLine(_lineOrigin, _lineEnd);
-        _lineOrigin = _HLLeftTop;
-        _lineEnd.x = _HLLeftTop.x;
-        _lineEnd.y = _HLRightBottom.y;
+        _lineEnd.x = left;
+        _lineEnd.y = bottom;
         DrawLine(_lineOrigin, _lineEnd);
-        _lineOrigin.x = _HLRightBottom.x;
-        _lineOrigin.y = _HLLeftTop.y;
-        _lineEnd = _HLRightBottom;
+        _lineOrigin.x = left;
+        _lineOrigin.y = top;
         DrawLine(_lineOrigin, _lineEnd);
     }
+
 
     /// <summary>
     /// クリックした座標から何小節目を選択したかを計算
@@ -184,19 +184,13 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
             totalLength = lastTotalLength + length;
 
             //矩形の2点の座標を求める
-            Vector3 leftTop = new Vector3(lastTotalLength, top);
-            Vector3 rightBottom = new Vector3(totalLength, bottom);
+            Vector3 leftTop = new Vector3(lastTotalLength + DataManager.Instance.offset, top);
+            Vector3 rightBottom = new Vector3(totalLength + DataManager.Instance.offset, bottom);
 
 
             // ヒットしたなら
             if (IsHitSquareAndDot(clickPos, leftTop, rightBottom))
-            {
-                // ハイライト用
-                _HLLeftTop = leftTop;
-                _HLRightBottom = rightBottom;
-
                 return bar.barNum;
-            }
 
             // ヒットしなければ次の小節を調べる
             lastTotalLength = totalLength;
@@ -205,6 +199,7 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
         // 該当なし
         return -1;
     }
+
 
     /// <summary>
     /// 指定した小節のどのマスにヒットしたか判定

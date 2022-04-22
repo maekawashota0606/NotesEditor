@@ -35,6 +35,7 @@ public class EditUIManager : SingletonMonoBehaviour<EditUIManager>
     {
         _pathField.text = DataManager.MUSIC_PATH_HEAD;
         _BPMField.text = DataManager.Instance.BPM.ToString();
+        _offsetField.text = DataManager.Instance.offset.ToString();
         _denominatorField.text = DataManager.Instance.measure.denominator.ToString();
         _numeratorField.text = DataManager.Instance.measure.numerator.ToString();
         _LPBField.text = DataManager.Instance.LPB.ToString();
