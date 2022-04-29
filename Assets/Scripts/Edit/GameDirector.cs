@@ -5,8 +5,9 @@ using UnityEngine;
 public class GameDirector : SingletonMonoBehaviour<GameDirector>
 {
     public GameState state = GameState.Edit;
-    private float _cue = -1;
+    private float _musicCue = -1;
     private float _duration = 0;
+    private float _SECue = -1;
 
     public enum GameState
     {
@@ -28,13 +29,20 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
 
         // 途中から再生
-        if (0 <= _cue)
-            DataManager.Instance.time = _cue;
+        if (0 <= _musicCue)
+            DataManager.Instance.time = _musicCue;
 
         // 再生
         if (AudioManager.Instance.PlayMusic(DataManager.Instance.time))
         {
             state = GameState.Playing;
+
+            // タイミングの一覧をリスト化
+            NotesManager.Instance.AlignNoteTimes();
+            // 最初のSEを鳴らすべきタイミングをセット
+            _SECue = NotesManager.Instance.NextCue(DataManager.Instance.time);
+
+            //
             StartCoroutine(OnPlaying());
         }
     }
@@ -44,11 +52,26 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     {
         while(state == GameState.Playing)
         {
+            // 再生時間が終了したなら
             if (_duration < DataManager.Instance.time)
                 state = GameState.Edit;
 
+            // 経過時間カウント
             DataManager.Instance.time += Time.deltaTime;
             EditUIManager.Instance.SetPlaySlider(DataManager.Instance.time, _duration);
+
+
+            // Cueが存在しない(マイナス)ならスルー
+            if (0 <= _SECue)
+            {
+                // SEが鳴るタイミングが来たら
+                if (_SECue < DataManager.Instance.time)
+                {
+                    AudioManager.Instance.PlaySE();
+                    // 次のSEが鳴るタイミングをセット
+                    _SECue = NotesManager.Instance.NextCue(DataManager.Instance.time);
+                }
+            }
 
             yield return null;
         }
@@ -59,8 +82,8 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     {
         if (state == GameState.Edit)
         {
-            _cue = _duration * ratio;
-            DataManager.Instance.time = _cue;
+            _musicCue = _duration * ratio;
+            DataManager.Instance.time = _musicCue;
         }
     }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 public class DataManager : SingletonMonoBehaviour<DataManager>
 {
     // ’è”
-    public const int MAX_BPM = 1000;
+    public const int MAX_BPM = 500;
     public const int MAX_LPB = 64;
     public const int MIN_LPB = 4;
     public const int MAX_LANE = 16;

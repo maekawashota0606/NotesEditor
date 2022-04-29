@@ -8,7 +8,8 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
     private AudioSource _music = null;
     [SerializeField]
     private AudioSource _tapSE = null;
-
+    [SerializeField]
+    private AudioClip _tapSE_1 = null;
     // 
     private bool _isLoading = false;
 
@@ -68,5 +69,10 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
     {
         _music.Stop();
         return _music.time;
+    }
+
+    public void PlaySE()
+    {
+        _tapSE.PlayOneShot(_tapSE_1);
     }
 }
