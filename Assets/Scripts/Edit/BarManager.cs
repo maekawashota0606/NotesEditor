@@ -37,18 +37,6 @@ public class BarManager : SingletonMonoBehaviour<BarManager>
         // TODO:barnumの修正
     }
 
-    /// <summary>
-    /// UIの値を書き換えた時、その値を選択中の小節に与える
-    /// </summary>
-    //public void OnChangedBarDataAtUI()
-    //{
-    //    if (DataManager.Instance.GetChoosingBarNum() < 0)
-    //        return;
-
-    //    Bar bar = barList[DataManager.Instance.GetChoosingBarNum()];
-    //    bar.Init(DataManager.Instance.GetChoosingBarNum());
-    //    ChangeBarData(bar);
-    //}
 
     public void AddNotes(int lane, int cell, int type)
     {

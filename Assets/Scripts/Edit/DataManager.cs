@@ -96,7 +96,10 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
 
         // ‘I‘ğ’†‚Ì¬ß‚ÌLPB‚ğ•ÏX
         if(-1 < _choosingBarNum)
-            BarManager.Instance.barList[_choosingBarNum].LPB = _LPB;
+        {
+            //BarManager.Instance.barList[_choosingBarNum].LPB = _LPB;
+            BarManager.Instance.barList[_choosingBarNum].SetLPB(_LPB);
+        }
     }
 
     public int GetLPB()
@@ -129,6 +132,7 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
         // ‘I‘ğ‚µ‚Ä‚¢‚é¬ß‚ª•Ï‚í‚Á‚½Û‚Ìˆ—
         if ( _choosingBarNum < 0)
             return;
+
         SetLPB(BarManager.Instance.barList[_choosingBarNum].LPB);
         SetMeasure(BarManager.Instance.barList[_choosingBarNum].measure.denominator, BarManager.Instance.barList[_choosingBarNum].measure.numerator);
     }

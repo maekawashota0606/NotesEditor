@@ -13,10 +13,7 @@ public class InputReceptor : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             if (EventSystem.current.IsPointerOverGameObject())
-            {
-                Debug.Log("stop");
                 return;
-            }
 
             Vector3 mousePos = Input.mousePosition;
             // zを正しく指定し直す(なぜか反転)
@@ -28,21 +25,20 @@ public class InputReceptor : MonoBehaviour
             DataManager.Instance.SetChoosingBarNum(GridManager.Instance.CheckHitBar(mousePos));
 
             // 非選択なら処理しない
-            if (-1 < DataManager.Instance.GetChoosingBarNum())
+            if (DataManager.Instance.GetChoosingBarNum() < 0)
+                return;
+            // すでに選択中の小節なら
+            else if (DataManager.Instance.GetChoosingBarNum() == lastBarNum)
             {
-                // すでに選択中の小節なら
-                if (DataManager.Instance.GetChoosingBarNum() == lastBarNum)
-                {
-                    int lane, cell;
-                    GridManager.Instance.CheckHitCell(mousePos, DataManager.Instance.GetChoosingBarNum(), out lane, out cell);
+                int lane, cell;
+                GridManager.Instance.CheckHitCell(mousePos, DataManager.Instance.GetChoosingBarNum(), out lane, out cell);
 
-                    // 該当しなければ処理しない
-                    if (lane < 0 || cell < 0)
-                        return;
+                // 該当しなければ処理しない
+                if (lane < 0 || cell < 0)
+                    return;
 
-                    // クリックした場所にノーツを追加
-                    BarManager.Instance.AddNotes(lane, cell, DataManager.Instance.GetEditMode());
-                }
+                // クリックした場所にノーツを追加
+                BarManager.Instance.AddNotes(lane, cell, DataManager.Instance.GetEditMode());
             }
         }
 
