@@ -11,7 +11,7 @@ public class MeshDrawer : SingletonMonoBehaviour<MeshDrawer>
     {
         _meshMaterial.SetPass(0);
 
-        foreach (BarData bar in DataManager.Instance.barList)
+        foreach (Bar bar in BarManager.Instance.barList)
         {
             for (int i = 0; i < DataManager.MAX_LANE; i++)
             {

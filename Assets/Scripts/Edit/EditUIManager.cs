@@ -25,6 +25,8 @@ public class EditUIManager : SingletonMonoBehaviour<EditUIManager>
     private Scrollbar _verticalBar = null;
     [SerializeField]
     private Slider _playSlider = null;
+    [SerializeField]
+    private Text _titleText = null;
 
     private void Start()
     {
@@ -33,141 +35,213 @@ public class EditUIManager : SingletonMonoBehaviour<EditUIManager>
 
     private void Init()
     {
-        _pathField.text = DataManager.MUSIC_PATH_HEAD;
-        _BPMField.text = DataManager.Instance.BPM.ToString();
-        _offsetField.text = DataManager.Instance.offset.ToString();
-        _denominatorField.text = DataManager.Instance.measure.denominator.ToString();
-        _numeratorField.text = DataManager.Instance.measure.numerator.ToString();
-        _LPBField.text = DataManager.Instance.LPB.ToString();
-        _laneField.text = DataManager.Instance.lane.ToString();
+        SetPathField(DataManager.MUSIC_PATH_HEAD);
+        SetBPMField(DataManager.Instance.GetBPM());
+        SetOffsetField(DataManager.Instance.GetOffset());
+        SetDenominatorFiled(DataManager.Instance.GetMeasure().denominator);
+        SetNumeratorFiled(DataManager.Instance.GetMeasure().numerator);
+        SetLPBField(DataManager.Instance.GetLPB());
+        SetLaneField(DataManager.Instance.GetLane());
     }
 
-    public void SetPath()
+    /// <summary>
+    /// UIからパスを変更した場合
+    /// </summary>
+    public void OnChangedPathField()
     {
+        string path = _pathField.text;
+
 #if UNITY_EDITOR
-        _pathField.text = "sample.wav";
+        path = "sample.wav";
 #endif
 
-        if (_pathField.text == string.Empty)
-            _pathField.text = DataManager.MUSIC_PATH_HEAD;
+        if (path != string.Empty)
+            DataManager.Instance.SetMusicPath(path);
         else
-            DataManager.Instance.musicPath = _pathField.text;
-
-        // 
-        StartCoroutine(AudioManager.Instance.SetAudioFile(DataManager.Instance.musicPath));
+            SetPathField(DataManager.MUSIC_PATH_HEAD);
     }
 
-    public void SetBPM()
+    /// <summary>
+    /// プログラム側がパスを変更した場合
+    /// </summary>
+    public void SetPathField(string path)
     {
-        float bpm = DataManager.Instance.BPM;
+        Debug.Log("パスを変更");
+        _pathField.text = path;
+    }
+
+    /// <summary>
+    /// UIからBPMを変更した場合
+    /// </summary>
+    public void OnChangedBPMField()
+    {
         if (_BPMField.text != string.Empty)
-        {
-            bpm = int.Parse(_BPMField.text);
-            if (DataManager.MAX_BPM < bpm)
-                bpm = DataManager.MAX_BPM;
-        }
+            DataManager.Instance.SetBPM(int.Parse(_BPMField.text));
+        else
+            SetBPMField(DataManager.Instance.GetBPM());
+    }
 
+    /// <summary>
+    /// プログラム側がBPMを変更した場合
+    /// </summary>
+    public void SetBPMField(float bpm)
+    {
+        Debug.Log("BPMを変更");
         _BPMField.text = bpm.ToString();
-        DataManager.Instance.BPM = bpm;
     }
 
-    public void SetOffset()
+    /// <summary>
+    /// UIからオフセットを変更した場合
+    /// </summary>
+    public void OnChangedOffsetField()
     {
-        if (_offsetField.text == string.Empty)
-            _offsetField.text = DataManager.Instance.offset.ToString();
+        if (_offsetField.text != string.Empty)
+            DataManager.Instance.SetOffset(float.Parse(_offsetField.text));
         else
-            DataManager.Instance.offset = float.Parse(_offsetField.text);
+            SetOffsetField(DataManager.Instance.GetOffset());
     }
 
-    public void SetDenominator()
+    /// <summary>
+    /// プログラム側がオフセットを変更した場合
+    /// </summary>
+    public void SetOffsetField(float offset)
     {
-        int d = int.Parse(_denominatorField.text);
-        if (_denominatorField.text == string.Empty || d < 1)
-            SetDenominatorText();
+        Debug.Log("オフセットを変更");
+        _offsetField.text = offset.ToString();
+    }
+
+    /// <summary>
+    /// UIから拍子の分母を変更した場合
+    /// </summary>
+    public void OnChangedDenominatorField()
+    {
+        if (_denominatorField.text != string.Empty)
+            DataManager.Instance.SetMeasure(int.Parse(_numeratorField.text), -1);
         else
-        {
-            DataManager.Instance.measure.denominator = d;
-            DataManager.Instance.OnChangedBarDataAtUI();
-        }
+            SetDenominatorFiled(DataManager.Instance.GetMeasure().denominator);
     }
 
-    public void SetDenominatorText()
+    /// <summary>
+    /// プログラム側が拍子の分母を変更した場合
+    /// </summary>
+    public void SetDenominatorFiled(int d)
     {
-        _denominatorField.text = DataManager.Instance.measure.denominator.ToString();
+        Debug.Log("拍子の分母を変更");
+        _denominatorField.text = d.ToString();
     }
 
-    public void SetNumerator()
+    /// <summary>
+    /// UIから拍子の分子を変更した場合
+    /// </summary>
+    public void OnChangedNumeratorField()
     {
-        int n = int.Parse(_numeratorField.text);
-        if (_numeratorField.text == string.Empty || n < 1)
-            SetNumeratorText();
+        if (_numeratorField.text != string.Empty)
+            DataManager.Instance.SetMeasure(-1, int.Parse(_numeratorField.text));
         else
-        {
-            DataManager.Instance.measure.numerator = n;
-            DataManager.Instance.OnChangedBarDataAtUI();
-        }
-
+            SetNumeratorFiled(DataManager.Instance.GetMeasure().numerator);
     }
 
-    public void SetNumeratorText()
+    /// <summary>
+    /// プログラム側が拍子の分子を変更した場合
+    /// </summary>
+    public void SetNumeratorFiled(int n)
     {
-        _numeratorField.text = DataManager.Instance.measure.numerator.ToString();
+        Debug.Log("拍子の分子を変更");
+        _numeratorField.text = n.ToString();
     }
 
-    public void SetLPB()
+    /// <summary>
+    /// UIからLPBを変更した場合
+    /// </summary>
+    public void OnChangedLPBField()
     {
-        if (int.TryParse(_LPBField.text, out int lpb))
-        {
-            if (lpb < DataManager.MIN_LPB)
-                DataManager.Instance.LPB = DataManager.MIN_LPB;
-            else if (DataManager.MAX_LPB < lpb)
-                DataManager.Instance.LPB = DataManager.MAX_LPB;
-            else
-                DataManager.Instance.LPB = lpb;
-
-            DataManager.Instance.OnChangedBarDataAtUI();
-        }
-
-        SetLPBText();
+        if (_LPBField.text != string.Empty)
+            DataManager.Instance.SetLPB(int.Parse(_LPBField.text));
+        else
+            SetLPBField(DataManager.Instance.GetLPB());
     }
 
-    public void SetLPBText()
+    /// <summary>
+    /// プログラム側がLPBを変更した場合
+    /// </summary>
+    /// <param name="lpb"></param>
+    public void SetLPBField(int lpb)
     {
-        _LPBField.text = DataManager.Instance.LPB.ToString();
+        Debug.Log("LPBを変更");
+        _LPBField.text = lpb.ToString();
     }
 
-    public void SetLane()
+    /// <summary>
+    /// UIからレーンを変更した場合
+    /// </summary>
+    public void OnChangedLaneField()
     {
-        int lane = DataManager.Instance.lane;
         if (_laneField.text != string.Empty)
-        {
-            lane = int.Parse(_laneField.text);
-            if (DataManager.MAX_LANE < lane)
-                lane = DataManager.MAX_LANE;
-        }
-
-        _laneField.text = lane.ToString();
-        DataManager.Instance.lane = lane;
+            DataManager.Instance.SetLane(int.Parse(_laneField.text));
+        else
+            SetLaneField(DataManager.Instance.GetLane());
     }
 
-    public void AddBar()
+    /// <summary>
+    /// プログラム側がレーンを変更した場合
+    /// </summary>
+    public void SetLaneField(int lane)
     {
-        DataManager.Instance.AddBarList();
+        Debug.Log("レーンを変更");
+        _laneField.text = lane.ToString();
     }
 
+    /// <summary>
+    /// UIから小節を作成した場合
+    /// </summary>
+    public void OnPushNewBarButton()
+    {
+        BarManager.Instance.NewBar();
+    }
+
+    /// <summary>
+    /// UIから再生をした場合
+    /// </summary>
     public void OnPushPlayButton()
     {
         GameDirector.Instance.Play();
     }
 
-    public void SetPlaySlider(float time,  float duration)
-    {
-        _playSlider.value = time / duration;
-    }
-
+    /// <summary>
+    /// UIからスライダーを操作した場合
+    /// </summary>
     public void OnChangedPlaySlider()
     {
         // スライダーの進捗率が変更された際に反映
         GameDirector.Instance.Skip(_playSlider.value);
+    }
+
+    /// <summary>
+    /// プログラムから再生時間を操作した場合
+    /// </summary>
+    /// <param name="time"></param>
+    /// <param name="duration"></param>
+    public void SetPlaySlider(float time, float duration)
+    {
+        _playSlider.value = time / duration;
+    }
+
+    /// <summary>
+    /// 曲ファイルを選択した際に曲名を表示する
+    /// </summary>
+    /// <param name="title"></param>
+    public void SetMusicTitle(string title)
+    {
+        Debug.Log("タイトルを変更");
+        _titleText.text = title;
+    }
+
+    /// <summary>
+    /// 終了ボタンを押した場合
+    /// </summary>
+    public void OnPushExitButton()
+    {
+        Debug.Log("終了します");
+        Application.Quit();
     }
 }

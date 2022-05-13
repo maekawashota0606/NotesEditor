@@ -20,8 +20,8 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
     {
         DrawHorizontalLine();
         DrawVerticalLines();
-        BarHighLight(DataManager.Instance.choosingBarNum);
-        DrawTimeLine(DataManager.Instance.time);
+        BarHighLight(DataManager.Instance.GetChoosingBarNum());
+        DrawTimeLine(DataManager.Instance.GetTime());
     }
 
 
@@ -67,8 +67,8 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
 
     private void DrawVerticalLines()
     {
-        float y = -DataManager.Instance.lane;
-        foreach (BarData bar in DataManager.Instance.barList)
+        float y = -DataManager.Instance.GetLane();
+        foreach (Bar bar in BarManager.Instance.barList)
         {
             // 1拍づつ調べる
             for(int i = 0; i < bar.LPB; i++)
@@ -100,17 +100,17 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
 
     private void DrawHorizontalLine()
     {
-        if (DataManager.Instance.barList.Count < 1)
+        if (BarManager.Instance.barList.Count < 1)
             return;
 
-        int lastBarIdx = DataManager.Instance.barList.Count - 1;
-        int lastNoteIdx = DataManager.Instance.barList[lastBarIdx].LPB - 1;
+        int lastBarIdx = BarManager.Instance.barList.Count - 1;
+        int lastNoteIdx = BarManager.Instance.barList[lastBarIdx].LPB - 1;
         // 最後の拍が来る時間を取得
-        float x = DataManager.Instance.barList[lastBarIdx].notesArray[0, lastNoteIdx].time;
+        float x = BarManager.Instance.barList[lastBarIdx].notesArray[0, lastNoteIdx].time;
 
         _lineMaterial.SetPass(0);
         // 1レーンまとめて描画(小節ごとに分けない)
-        for (int i = 0; i < DataManager.Instance.lane + 1; i++)
+        for (int i = 0; i < DataManager.Instance.GetLane() + 1; i++)
         {
             // Vector3に格納して関数に渡す
             // 始点
@@ -132,10 +132,10 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
         if (idx < 0)
             return;
 
-        float left = DataManager.Instance.barList[idx].notesArray[0, 0].time;
-        float right = DataManager.Instance.barList[idx].notesArray[0, DataManager.Instance.barList[idx].LPB - 1].time + DataManager.Instance.barList[idx].notesArray[0, DataManager.Instance.barList[idx].LPB - 1].length;
+        float left = BarManager.Instance.barList[idx].notesArray[0, 0].time;
+        float right = BarManager.Instance.barList[idx].notesArray[0, BarManager.Instance.barList[idx].LPB - 1].time + BarManager.Instance.barList[idx].notesArray[0, BarManager.Instance.barList[idx].LPB - 1].length;
         float top = 0;
-        float bottom = -DataManager.Instance.lane;
+        float bottom = -DataManager.Instance.GetLane();
 
         //矩形の4辺を描画
         _highlightMat.SetPass(0);
@@ -166,13 +166,13 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
         // 上辺のy座標(固定)
         float top = 0;
         // 底辺のy座標(固定)
-        float bottom = -DataManager.Instance.lane;
+        float bottom = -DataManager.Instance.GetLane();
         // 1つ前の小節の合計の長さ
         float lastTotalLength = 0;
 
 
         // 1小節づつチェック
-        foreach (BarData bar in DataManager.Instance.barList)
+        foreach (Bar bar in BarManager.Instance.barList)
         {
             // この小節を含めたこれまでの小節の合計の長さ
             float totalLength = 0;
@@ -184,8 +184,8 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
             totalLength = lastTotalLength + length;
 
             //矩形の2点の座標を求める
-            Vector3 leftTop = new Vector3(lastTotalLength + DataManager.Instance.offset, top);
-            Vector3 rightBottom = new Vector3(totalLength + DataManager.Instance.offset, bottom);
+            Vector3 leftTop = new Vector3(lastTotalLength + DataManager.Instance.GetOffset(), top);
+            Vector3 rightBottom = new Vector3(totalLength + DataManager.Instance.GetOffset(), bottom);
 
 
             // ヒットしたなら
@@ -211,7 +211,7 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
     public void CheckHitCell(Vector3 clickPos, int idx, out int lane, out int cell)
     {
         // 1レーンごとに調べる
-        for (int i = 0; i < DataManager.Instance.lane; i++)
+        for (int i = 0; i < DataManager.Instance.GetLane(); i++)
         {
             // 上辺のy座標
             float top = i * -1;
@@ -220,12 +220,12 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
 
 
             // 1拍づつ判定
-            for (int j = 0; j < DataManager.Instance.barList[idx].LPB; j++)
+            for (int j = 0; j < BarManager.Instance.barList[idx].LPB; j++)
             {
                 // 左辺のx座標(この拍が来る時間)
-                float left = DataManager.Instance.barList[idx].notesArray[i, j].time;
+                float left = BarManager.Instance.barList[idx].notesArray[i, j].time;
                 // 右辺のx座標(この拍が来る時間 + この拍の長さ = この拍の終わり)
-                float right = left + DataManager.Instance.barList[idx].notesArray[i, j].length;
+                float right = left + BarManager.Instance.barList[idx].notesArray[i, j].length;
 
                 // 2点の座標をセット
                 Vector3 leftTop = new Vector3(left, top);

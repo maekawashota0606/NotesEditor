@@ -30,17 +30,17 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
         // 途中から再生
         if (0 <= _musicCue)
-            DataManager.Instance.time = _musicCue;
+            DataManager.Instance.SetTime(_musicCue);
 
         // 再生
-        if (AudioManager.Instance.PlayMusic(DataManager.Instance.time))
+        if (AudioManager.Instance.PlayMusic(DataManager.Instance.GetTime()))
         {
             state = GameState.Playing;
 
             // タイミングの一覧をリスト化
             NotesManager.Instance.AlignNoteTimes();
             // 最初のSEを鳴らすべきタイミングをセット
-            _SECue = NotesManager.Instance.NextCue(DataManager.Instance.time);
+            _SECue = NotesManager.Instance.NextCue(DataManager.Instance.GetTime());
 
             //
             StartCoroutine(OnPlaying());
@@ -53,23 +53,23 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         while(state == GameState.Playing)
         {
             // 再生時間が終了したなら
-            if (_duration < DataManager.Instance.time)
+            if (_duration < DataManager.Instance.GetTime())
                 state = GameState.Edit;
 
             // 経過時間カウント
-            DataManager.Instance.time += Time.deltaTime;
-            EditUIManager.Instance.SetPlaySlider(DataManager.Instance.time, _duration);
+            DataManager.Instance.SetTime(DataManager.Instance.GetTime() + Time.deltaTime);
+            EditUIManager.Instance.SetPlaySlider(DataManager.Instance.GetTime(), _duration);
 
 
             // Cueが存在しない(マイナス)ならスルー
             if (0 <= _SECue)
             {
                 // SEが鳴るタイミングが来たら
-                if (_SECue < DataManager.Instance.time)
+                if (_SECue < DataManager.Instance.GetTime())
                 {
                     AudioManager.Instance.PlaySE();
                     // 次のSEが鳴るタイミングをセット
-                    _SECue = NotesManager.Instance.NextCue(DataManager.Instance.time);
+                    _SECue = NotesManager.Instance.NextCue(DataManager.Instance.GetTime());
                 }
             }
 
@@ -83,7 +83,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         if (state == GameState.Edit)
         {
             _musicCue = _duration * ratio;
-            DataManager.Instance.time = _musicCue;
+            DataManager.Instance.SetTime(_musicCue);
         }
     }
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class InputReceptor : MonoBehaviour
 {
@@ -11,37 +12,38 @@ public class InputReceptor : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                Debug.Log("stop");
+                return;
+            }
+
             Vector3 mousePos = Input.mousePosition;
             // zを正しく指定し直す(なぜか反転)
             mousePos.z = EditCameraController.Instance.gameObject.transform.position.z * -1;
             mousePos = Camera.main.ScreenToWorldPoint(mousePos);
-            // 
-            int lastBarNum = DataManager.Instance.choosingBarNum;
-            DataManager.Instance.choosingBarNum = GridManager.Instance.CheckHitBar(mousePos);
 
-            // 非選択なら前回の番号へ
-            if (-1 < DataManager.Instance.choosingBarNum)
+            // 
+            int lastBarNum = DataManager.Instance.GetChoosingBarNum();
+            DataManager.Instance.SetChoosingBarNum(GridManager.Instance.CheckHitBar(mousePos));
+
+            // 非選択なら処理しない
+            if (-1 < DataManager.Instance.GetChoosingBarNum())
             {
                 // すでに選択中の小節なら
-                if (DataManager.Instance.choosingBarNum == lastBarNum)
+                if (DataManager.Instance.GetChoosingBarNum() == lastBarNum)
                 {
                     int lane, cell;
-                    GridManager.Instance.CheckHitCell(mousePos, DataManager.Instance.choosingBarNum, out lane, out cell);
+                    GridManager.Instance.CheckHitCell(mousePos, DataManager.Instance.GetChoosingBarNum(), out lane, out cell);
 
-
+                    // 該当しなければ処理しない
                     if (lane < 0 || cell < 0)
                         return;
 
-                    DataManager.Instance.AddNotes(lane, cell);
-                }
-                else
-                {
-                    // 選択している小節のデータをUIに表示
-                    DataManager.Instance.OnChangedChoosingBar();
+                    // クリックした場所にノーツを追加
+                    BarManager.Instance.AddNotes(lane, cell, DataManager.Instance.GetEditMode());
                 }
             }
-            else
-                DataManager.Instance.choosingBarNum = lastBarNum;
         }
 
 

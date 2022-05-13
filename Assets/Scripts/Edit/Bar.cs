@@ -1,7 +1,7 @@
 /// <summary>
 /// 小節データクラス
 /// </summary>
-public class BarData
+public class Bar
 {
     /// <summary>
     /// 小節番号
@@ -20,11 +20,6 @@ public class BarData
     /// </summary>
     public NotesData.Note[,] notesArray = new NotesData.Note[DataManager.MAX_LANE, DataManager.MAX_LPB];
 
-    // いる？
-    //public Vector3 origin  = Vector3.zero;
-    //public float barDuration = 0;
-    //public List<float> verticalLinePosXList = new List<float>(DataManager.MAX_LPB);
-    //public List<float> notesDuration = new List<float>(DataManager.MAX_LPB);
 
     public struct Measure
     {
@@ -37,12 +32,11 @@ public class BarData
         }
     }
 
-    public void Init(int num, Measure m, int lpb)
+    public void Init(int num)
     {
         barNum = num;
-        measure = m;
-        LPB = lpb;
-        //origin = Vector3.zero;
+        measure = DataManager.Instance.GetMeasure();
+        LPB = DataManager.Instance.GetLPB();
         notesArray = new NotesData.Note[DataManager.MAX_LANE, DataManager.MAX_LPB];
 
         // ノーツのタイミングを再計算
