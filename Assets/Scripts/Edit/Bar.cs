@@ -1,6 +1,7 @@
 /// <summary>
 /// 小節データクラス
 /// </summary>
+[System.Serializable]
 public class Bar
 {
     /// <summary>
@@ -18,7 +19,7 @@ public class Bar
     /// <summary>
     /// 編集中のノーツデータ(空も含む)
     /// </summary>
-    public NotesData.Note[,] notesArray = new NotesData.Note[DataManager.MAX_LANE, DataManager.MAX_LPB];
+    public Note[,] notesArray = new Note[DataManager.MAX_LANE, DataManager.MAX_LPB];
 
 
     public struct Measure
@@ -37,7 +38,7 @@ public class Bar
         barNum = num;
         measure = DataManager.Instance.GetMeasure();
         LPB = DataManager.Instance.GetLPB();
-        notesArray = new NotesData.Note[DataManager.MAX_LANE, DataManager.MAX_LPB];
+        notesArray = new Note[DataManager.MAX_LANE, DataManager.MAX_LPB];
 
         // ノーツのタイミングを再計算
     }

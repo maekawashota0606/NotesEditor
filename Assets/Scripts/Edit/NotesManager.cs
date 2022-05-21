@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 
+/// <summary>
+/// 
+/// </summary>
 public class NotesManager : SingletonMonoBehaviour<NotesManager>
 {
     private List<float> _noteTimes = new List<float>(19200);
-
 
     /// <summary>
     /// ノーツのタイミングなどを計算
@@ -29,7 +31,7 @@ public class NotesManager : SingletonMonoBehaviour<NotesManager>
                 // TODO:オフセットなどを考慮
                 float length = 60 / DataManager.Instance.GetBPM() * 4 * barData.measure.numerator / barData.measure.denominator / barData.LPB;
                 // 計算後のデータを代入
-                NotesData.Note note = BarManager.Instance.barList[barData.barNum].notesArray[lane, i];
+                Note note = BarManager.Instance.barList[barData.barNum].notesArray[lane, i];
                 note.length = length;
                 //
                 note.time = DataManager.Instance.GetOffset() + totalTime;

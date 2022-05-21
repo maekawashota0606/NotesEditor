@@ -7,7 +7,7 @@ public class InputReceptor : MonoBehaviour
 {
     private void Update()
     {
-        // 必要なタイミングで
+        // TODO:必要なタイミングでのみ実行
         NotesManager.Instance.CalNotes();
 
         if (Input.GetMouseButtonDown(0))
@@ -41,18 +41,5 @@ public class InputReceptor : MonoBehaviour
                 BarManager.Instance.AddNotes(lane, cell, DataManager.Instance.GetEditMode());
             }
         }
-
-
-        // カメラ操作
-        Vector3 move = Vector3.zero;
-
-        if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
-            move.z = Input.GetAxis("Mouse ScrollWheel");
-        else if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-            move.y = Input.GetAxis("Mouse ScrollWheel");
-        else
-            move.x = Input.GetAxis("Mouse ScrollWheel");
-
-        EditCameraController.Instance.Move(move);
     }
 }

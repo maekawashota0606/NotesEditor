@@ -11,7 +11,21 @@ public class EditCameraController : SingletonMonoBehaviour<EditCameraController>
     [SerializeField]
     private float _maxShrink = -25;
 
-    public void Move(Vector3 move)
+    private void Update()
+    {
+        Vector3 move = Vector3.zero;
+
+        if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+            move.z = Input.GetAxis("Mouse ScrollWheel");
+        else if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+            move.y = Input.GetAxis("Mouse ScrollWheel");
+        else
+            move.x = Input.GetAxis("Mouse ScrollWheel");
+
+        Move(move);
+    }
+
+    private void Move(Vector3 move)
     {
         Vector3 pos = Multiply(_scrollRatio, move);
         _camera.gameObject.transform.position += pos;
@@ -26,7 +40,7 @@ public class EditCameraController : SingletonMonoBehaviour<EditCameraController>
             _camera.gameObject.transform.position += Vector3.forward * (_maxShrink - _camera.gameObject.transform.position.z);
     }
 
-    public Vector3 Multiply(Vector3 v1, Vector3 v2)
+    private Vector3 Multiply(Vector3 v1, Vector3 v2)
     {
         return new Vector3(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
     }
