@@ -91,12 +91,11 @@ namespace Notes
         /// 開始から何秒で来るのか
         /// </summary>
         public float time;
+        [System.NonSerialized]
         /// <summary>
-        /// 拍の長さ(sec)
+        /// 拍の長さ(sec)、JSON化においては必要ない
         /// </summary>
         public float length;
-
-
 
         // TODO:実装予定
         //public float highSpeed;

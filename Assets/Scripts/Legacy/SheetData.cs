@@ -65,12 +65,17 @@ public class SheetData
             ConvertData(bar);
     }
 
+    /// <summary>
+    /// 各小節のノーツを一括収納
+    /// </summary>
+    /// <param name="bar"></param>
     private void ConvertData(Notes.Bar bar)
     {
         for (int i = 0; i < bar.notesArray.GetLength(0); i++)
         {
             for (int j = 0; j < bar.LPB; j++)
             {
+                // 必要なノーツのみ抽出
                 if (bar.notesArray[i, j].notesType != 0)
                     notesList.Add(bar.notesArray[i, j]);
             }
