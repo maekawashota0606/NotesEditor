@@ -27,6 +27,8 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
     /// 選択中の小節(非選択なら-1)
     /// </summary>
     private int _choosingBarNum = -1;
+    // Json化する前のデータ
+    private SheetData _sheetData = new SheetData();
 
 
     public void SetMusicPath(string path)
@@ -160,5 +162,16 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
     public float GetTime()
     {
         return _time;
+    }
+
+    public void SetSheetData(SheetData data)
+    {
+        _sheetData = data;
+        JsonGenerator.Instance.Generate(_sheetData);
+    }
+
+    public SheetData GetSheetData()
+    {
+        return _sheetData;
     }
 }

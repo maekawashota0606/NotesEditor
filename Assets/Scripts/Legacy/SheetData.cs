@@ -31,7 +31,7 @@ public class SheetData
     /// </summary>
     public float basicBPM = 0;
     /// <summary>
-    /// 音源と紐づけ
+    /// 音源のパス
     /// </summary>
     public string musicPath = string.Empty;
     /// <summary>
@@ -39,7 +39,26 @@ public class SheetData
     /// </summary>
     public float demoStart = 0;
     /// <summary>
-    /// Json化されるデータを格納
+    /// 小節ごとのノーツデータを格納
     /// </summary>
     public List<Bar> barList = new List<Bar>();
+
+
+    public SheetData()
+    {
+        //
+    }
+
+    public SheetData(string title, string subTitle, int musicID, int course, float level, float basicBpm, string musicPath, float demoStart, List<Bar> barList)
+    {
+        this.title = title;
+        this.subTitle = subTitle;
+        this.musicID = musicID;
+        this.course = course;
+        this.level = level;
+        this.basicBPM = basicBpm;
+        this.musicPath = musicPath;
+        this.demoStart = demoStart;
+        this.barList = barList;
+    }
 }

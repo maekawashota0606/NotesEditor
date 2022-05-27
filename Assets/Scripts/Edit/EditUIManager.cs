@@ -208,6 +208,15 @@ public class EditUIManager : SingletonMonoBehaviour<EditUIManager>
     }
 
     /// <summary>
+    /// UIからデータ生成をした場合
+    /// </summary>
+    public void OnPushGenerateButton()
+    {
+        SheetData data = new SheetData("dummy", "sub", 0, 0, 0, 0, "path", 0, BarManager.Instance.barList);
+        DataManager.Instance.SetSheetData(data);
+    }
+
+    /// <summary>
     /// UIからスライダーを操作した場合
     /// </summary>
     public void OnChangedPlaySlider()
