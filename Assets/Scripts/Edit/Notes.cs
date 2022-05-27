@@ -72,6 +72,7 @@ namespace Notes
     /// <summary>
     /// ƒm[ƒc1‚Â‚ÉŠÜ‚Ü‚ê‚éî•ñ
     /// </summary>
+    [System.Serializable]
     public struct Note
     {
         /// <summary>
@@ -96,17 +97,29 @@ namespace Notes
         public float length;
 
 
+
         // TODO:À‘•—\’è
         //public float highSpeed;
         //public float BPM;
         //public float offset;
         //public List<Note> notes;
+
+        public Note(int notesType, int lane, int frame, float time, float length)
+        {
+            this.notesType = notesType;
+            this.lane = lane;
+            this.frame = frame;
+            this.time = time;
+            this.length = length;
+        }
     }
 
+    [System.Serializable]
     public struct Measure
     {
         public int denominator;
         public int numerator;
+
         public Measure(int denom, int num)
         {
             denominator = denom;

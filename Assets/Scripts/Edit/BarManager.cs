@@ -23,10 +23,10 @@ public class BarManager : SingletonMonoBehaviour<BarManager>
     }
 
 
-    public void ChangeBarData(Notes.Bar bar)
-    {
-        barList[bar.barNum] = bar;
-    }
+    //public void ChangeBarData(Notes.Bar bar)
+    //{
+    //    barList[bar.barNum] = bar;
+    //}
 
     public void RemoveBarList(int idx)
     {
