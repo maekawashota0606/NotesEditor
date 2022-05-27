@@ -22,6 +22,7 @@ public class JsonGenerator : SingletonMonoBehaviour<JsonGenerator>
         // 出力パスを指定、書き出し形式は上書き
         StreamWriter writer = new StreamWriter(Application.dataPath + "/" + _FOLDER_NAME + "/" + fileName, false);
         
+        
         //Debug.Log(Application.dataPath + "/" + _FOLDER_NAME + "/" + fileName);
         string jsonData = JsonUtility.ToJson(data);
         //Debug.Log(jsonData);

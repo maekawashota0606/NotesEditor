@@ -14,7 +14,7 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
 
     // ƒ†[ƒU[İ’è•Ï”
     public Vector2 stretchRatio = new Vector2(1, 1);
-    private int targetFrameRate = 60;
+    private int _targetFrameRate = 60;
     private string _musicPath = string.Empty;
     private float _BPM = 150;
     private float _offset = 0;
@@ -164,8 +164,19 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
         return _time;
     }
 
-    public void SetSheetData(SheetData data)
+    public void SetTargetFrameRate(int frameRate)
     {
+        _targetFrameRate = frameRate;
+    }
+
+    public int GetTargetFrameRate()
+    {
+        return _targetFrameRate;
+    }
+
+    public void SetSheetData()
+    {
+        SheetData data = new SheetData("dummy", "sub", 0, 0, 0, 0, "path", 0, BarManager.Instance.barList);
         _sheetData = data;
         JsonGenerator.Instance.Generate(_sheetData);
     }

@@ -3,7 +3,6 @@ namespace Notes
     /// <summary>
     /// 小節データクラス
     /// </summary>
-    [System.Serializable]
     public class Bar
     {
         /// <summary>
@@ -67,6 +66,7 @@ namespace Notes
                 }
             }
         }
+
     }
 
     /// <summary>

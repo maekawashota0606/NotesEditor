@@ -39,9 +39,9 @@ public class SheetData
     /// </summary>
     public float demoStart = 0;
     /// <summary>
-    /// 小節ごとのノーツデータを格納
+    /// ノーツデータをまとめて格納
     /// </summary>
-    public List<Notes.Bar> barList = new List<Notes.Bar>();
+    public List<Notes.Note> notesList = new List<Notes.Note>();
 
 
     public SheetData()
@@ -59,6 +59,23 @@ public class SheetData
         this.basicBPM = basicBpm;
         this.musicPath = musicPath;
         this.demoStart = demoStart;
-        this.barList = barList;
+
+        notesList.Clear();
+        foreach (Notes.Bar bar in barList)
+            ConvertData(bar);
     }
+
+    private void ConvertData(Notes.Bar bar)
+    {
+        for (int i = 0; i < bar.notesArray.GetLength(0); i++)
+        {
+            for (int j = 0; j < bar.LPB; j++)
+            {
+                if (bar.notesArray[i, j].notesType != 0)
+                    notesList.Add(bar.notesArray[i, j]);
+            }
+        }
+
+    }
+
 }

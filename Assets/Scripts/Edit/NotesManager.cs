@@ -32,11 +32,16 @@ public class NotesManager : SingletonMonoBehaviour<NotesManager>
                 float length = 60 / DataManager.Instance.GetBPM() * 4 * barData.measure.numerator / barData.measure.denominator / barData.LPB;
                 // 計算後のデータを代入
                 Notes.Note note = BarManager.Instance.barList[barData.barNum].notesArray[lane, i];
-                note.length = length;
+                //
+                note.lane = lane;
                 //
                 note.time = DataManager.Instance.GetOffset() + totalTime;
+                // 何フレーム目にくるかを計算
+                double frame = System.Math.Round(note.time / (1f / DataManager.Instance.GetTargetFrameRate()), System.MidpointRounding.AwayFromZero);
+                note.frame = (int)frame;
+                //UnityEngine.Debug.Log(note.time + "_" + frame);
                 //
-                // TODO:フレームを計算
+                note.length = length;
                 //
                 BarManager.Instance.barList[barData.barNum].notesArray[lane, i] = note;
                 //
@@ -66,7 +71,7 @@ public class NotesManager : SingletonMonoBehaviour<NotesManager>
                     {
                         // 追加
                         _noteTimes.Add(data.notesArray[j, i].time);
-                        UnityEngine.Debug.Log(data.notesArray[j, i].time);
+                        //UnityEngine.Debug.Log(data.notesArray[j, i].time);
                         // 同タイミングはスルーし、次のLPBを調べる
                         break;
                     }

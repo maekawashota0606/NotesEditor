@@ -212,8 +212,7 @@ public class EditUIManager : SingletonMonoBehaviour<EditUIManager>
     /// </summary>
     public void OnPushGenerateButton()
     {
-        SheetData data = new SheetData("dummy", "sub", 0, 0, 0, 0, "path", 0, BarManager.Instance.barList);
-        DataManager.Instance.SetSheetData(data);
+        DataManager.Instance.SetSheetData();
     }
 
     /// <summary>
