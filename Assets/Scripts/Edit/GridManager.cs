@@ -68,7 +68,7 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
     private void DrawVerticalLines()
     {
         float y = -DataManager.Instance.GetLane();
-        foreach (Bar bar in BarManager.Instance.barList)
+        foreach (Notes.Bar bar in BarManager.Instance.barList)
         {
             // 1拍づつ調べる
             for(int i = 0; i < bar.LPB; i++)
@@ -172,7 +172,7 @@ public class GridManager : SingletonMonoBehaviour<GridManager>
 
 
         // 1小節づつチェック
-        foreach (Bar bar in BarManager.Instance.barList)
+        foreach (Notes.Bar bar in BarManager.Instance.barList)
         {
             // この小節を含めたこれまでの小節の合計の長さ
             float totalLength = 0;

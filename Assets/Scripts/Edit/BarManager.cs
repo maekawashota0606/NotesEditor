@@ -2,19 +2,19 @@ using System.Collections.Generic;
 
 public class BarManager : SingletonMonoBehaviour<BarManager>
 {
-    public List<Bar> barList = new List<Bar>(DataManager.MAX_BAR);
+    public List<Notes.Bar> barList = new List<Notes.Bar>(DataManager.MAX_BAR);
 
     public void NewBar()
     {
         if (DataManager.MAX_BAR < barList.Count)
             return;
 
-        Bar bar = new Bar();
+        Notes.Bar bar = new Notes.Bar();
         bar.Init(barList.Count);
         AddBarList(bar);
     }
 
-    private void AddBarList(Bar bar)
+    private void AddBarList(Notes.Bar bar)
     {
         barList.Add(bar);
 
@@ -23,7 +23,7 @@ public class BarManager : SingletonMonoBehaviour<BarManager>
     }
 
 
-    public void ChangeBarData(Bar bar)
+    public void ChangeBarData(Notes.Bar bar)
     {
         barList[bar.barNum] = bar;
     }
@@ -49,7 +49,7 @@ public class BarManager : SingletonMonoBehaviour<BarManager>
     /// <summary>
     /// LPBを変更した際に既に配置してあるノーツを変更後のLPBに沿って再配置する
     /// </summary>
-    public void SetNotesIndex(Bar bar, int changedLPB)
+    public void SetNotesIndex(Notes.Bar bar, int changedLPB)
     {
         barList[bar.barNum].Init(bar.barNum);
 

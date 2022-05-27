@@ -18,7 +18,7 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
     private string _musicPath = string.Empty;
     private float _BPM = 150;
     private float _offset = 0;
-    private Bar.Measure _measure = new Bar.Measure(4, 4);
+    private Notes.Measure _measure = new Notes.Measure(4, 4);
     private int _LPB = 16;
     private int _lane = 7;
     private int _editMode = 1;
@@ -80,7 +80,7 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
             BarManager.Instance.barList[_choosingBarNum].measure = _measure;
     }
 
-    public Bar.Measure GetMeasure()
+    public Notes.Measure GetMeasure()
     {
         return _measure;
     }

@@ -41,15 +41,15 @@ public class SheetData
     /// <summary>
     /// ¬ß‚²‚Æ‚Ìƒm[ƒcƒf[ƒ^‚ğŠi”[
     /// </summary>
-    public List<Bar> barList = new List<Bar>();
+    public List<Notes.Bar> barList = new List<Notes.Bar>();
 
 
     public SheetData()
     {
-        //
+
     }
 
-    public SheetData(string title, string subTitle, int musicID, int course, float level, float basicBpm, string musicPath, float demoStart, List<Bar> barList)
+    public SheetData(string title, string subTitle, int musicID, int course, float level, float basicBpm, string musicPath, float demoStart, List<Notes.Bar> barList)
     {
         this.title = title;
         this.subTitle = subTitle;
