@@ -27,6 +27,12 @@ public class EditUIManager : SingletonMonoBehaviour<EditUIManager>
     private Slider _playSlider = null;
     [SerializeField]
     private Text _titleText = null;
+    [SerializeField]
+    private Button _playButton = null;
+    [SerializeField]
+    private Sprite _play = null;
+    [SerializeField]
+    private Sprite _pause = null;
 
     private void Start()
     {
@@ -55,6 +61,8 @@ public class EditUIManager : SingletonMonoBehaviour<EditUIManager>
         path = "sample.wav";
 #endif
 
+        DataManager.Instance.SetTime(0);
+        SetPlaySlider(0f, 1f);
         if (path != string.Empty)
             DataManager.Instance.SetMusicPath(path);
         else
@@ -205,6 +213,14 @@ public class EditUIManager : SingletonMonoBehaviour<EditUIManager>
     public void OnPushPlayButton()
     {
         GameDirector.Instance.Play();
+    }
+
+    public void OnChengedPlayState(bool isPlaying)
+    {
+        if(isPlaying)
+            _playButton.image.sprite = _pause;
+        else
+            _playButton.image.sprite = _play;
     }
 
     /// <summary>

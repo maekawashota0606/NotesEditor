@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameDirector : SingletonMonoBehaviour<GameDirector>
 {
-    public GameState state = GameState.Edit;
+    private GameState _state = GameState.Edit;
     private float _musicCue = -1;
     private float _duration = 0;
     private float _SECue = -1;
@@ -16,14 +16,24 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         //Option
     }
 
+    public GameState GetState()
+    {
+        return _state;
+    }
+
+    public void SetState(GameState state)
+    {
+        EditUIManager.Instance.OnChengedPlayState(state == GameState.Playing);
+        _state = state;
+    }
 
     public void Play()
     {
         // 再生中なら
-        if(state == GameState.Playing)
+        if(GetState() == GameState.Playing)
         {
             AudioManager.Instance.StopMusic();
-            state = GameState.Edit;
+            SetState(GameState.Edit);
             return;
         }
 
@@ -35,7 +45,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         // 再生
         if (AudioManager.Instance.PlayMusic(DataManager.Instance.GetTime()))
         {
-            state = GameState.Playing;
+            SetState(GameState.Playing);
 
             // タイミングの一覧をリスト化
             NotesManager.Instance.AlignNoteTimes();
@@ -50,11 +60,11 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
     private IEnumerator OnPlaying()
     {
-        while(state == GameState.Playing)
+        while(GetState() == GameState.Playing)
         {
             // 再生時間が終了したなら
             if (_duration < DataManager.Instance.GetTime())
-                state = GameState.Edit;
+                SetState(GameState.Edit);
 
             // 経過時間カウント
             DataManager.Instance.SetTime(DataManager.Instance.GetTime() + Time.deltaTime);
@@ -67,7 +77,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 // SEが鳴るタイミングが来たら
                 if (_SECue < DataManager.Instance.GetTime())
                 {
-                    AudioManager.Instance.PlaySE();
+                    AudioManager.Instance.PlayTapSE();
                     // 次のSEが鳴るタイミングをセット
                     _SECue = NotesManager.Instance.NextCue(DataManager.Instance.GetTime());
                 }
@@ -80,7 +90,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
     public void Skip(float ratio)
     {
-        if (state == GameState.Edit)
+        if (GetState() == GameState.Edit)
         {
             _musicCue = _duration * ratio;
             DataManager.Instance.SetTime(_musicCue);

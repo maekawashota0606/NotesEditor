@@ -29,5 +29,7 @@ public class JsonGenerator : SingletonMonoBehaviour<JsonGenerator>
         writer.WriteLine(jsonData);
         writer.Flush();
         writer.Close();
+
+        AudioManager.Instance.PlayCompleteSE();
     }
 }
