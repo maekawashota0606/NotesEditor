@@ -10,7 +10,7 @@ public class JsonGenerator : SingletonMonoBehaviour<JsonGenerator>
     public void Generate(SheetData data)
     {
         // jsonƒtƒ@ƒCƒ‹–¼
-        string fileName = $"{data.musicID}_{data.course}.json";
+        string fileName = $"{data.title}_{data.musicID}_{data.course}.json";
 
 
         if(!Directory.Exists(Application.dataPath + "/" + _FOLDER_NAME))

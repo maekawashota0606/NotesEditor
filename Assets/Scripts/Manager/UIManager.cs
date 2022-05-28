@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EditUIManager : SingletonMonoBehaviour<EditUIManager>
+public class UIManager : SingletonMonoBehaviour<UIManager>
 {
     [SerializeField]
     private InputField _pathField = null;
@@ -25,6 +25,8 @@ public class EditUIManager : SingletonMonoBehaviour<EditUIManager>
     private Scrollbar _verticalBar = null;
     [SerializeField]
     private Slider _playSlider = null;
+    [SerializeField]
+    private Slider _volumeSlider = null;
     [SerializeField]
     private Text _titleText = null;
     [SerializeField]
@@ -232,7 +234,7 @@ public class EditUIManager : SingletonMonoBehaviour<EditUIManager>
     }
 
     /// <summary>
-    /// UIからスライダーを操作した場合
+    /// UIから再生時間スライダーを操作した場合
     /// </summary>
     public void OnChangedPlaySlider()
     {
@@ -248,6 +250,14 @@ public class EditUIManager : SingletonMonoBehaviour<EditUIManager>
     public void SetPlaySlider(float time, float duration)
     {
         _playSlider.value = time / duration;
+    }
+
+    /// <summary>
+    /// UIからボリュームスライダーを操作した場合
+    /// </summary>
+    public void OnChangedVolumeSlider()
+    {
+        AudioManager.Instance.SetMasterVolume(_volumeSlider.value);
     }
 
     /// <summary>
@@ -269,3 +279,5 @@ public class EditUIManager : SingletonMonoBehaviour<EditUIManager>
         Application.Quit();
     }
 }
+
+// lane 変更した際の変化

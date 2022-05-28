@@ -23,7 +23,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
     public void SetState(GameState state)
     {
-        EditUIManager.Instance.OnChengedPlayState(state == GameState.Playing);
+        UIManager.Instance.OnChengedPlayState(state == GameState.Playing);
         _state = state;
     }
 
@@ -68,7 +68,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
             // 経過時間カウント
             DataManager.Instance.SetTime(DataManager.Instance.GetTime() + Time.deltaTime);
-            EditUIManager.Instance.SetPlaySlider(DataManager.Instance.GetTime(), _duration);
+            UIManager.Instance.SetPlaySlider(DataManager.Instance.GetTime(), _duration);
 
 
             // Cueが存在しない(マイナス)ならスルー

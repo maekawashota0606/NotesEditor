@@ -34,8 +34,8 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
     public void SetMusicPath(string path)
     {
         _musicPath = path;
-        EditUIManager.Instance.SetPathField(_musicPath);
-        StartCoroutine(AudioManager.Instance.SetAudioFile(GetMusicPath()));
+        UIManager.Instance.SetPathField(_musicPath);
+        StartCoroutine(AudioManager.Instance.LoadAudioFile(GetMusicPath()));
     }
 
     public string GetMusicPath()
@@ -47,7 +47,7 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
     {
         if (bpm < MAX_BPM)
             _BPM = bpm;
-        EditUIManager.Instance.SetBPMField(_BPM);
+        UIManager.Instance.SetBPMField(_BPM);
     }
 
     public float GetBPM()
@@ -58,7 +58,7 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
     public void SetOffset(float offset)
     {
         _offset = offset;
-        EditUIManager.Instance.SetOffsetField(_offset);
+        UIManager.Instance.SetOffsetField(_offset);
     }
 
     public float GetOffset()
@@ -72,8 +72,8 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
             _measure.denominator = d;
         if(0 < n)
             _measure.numerator = n;
-        EditUIManager.Instance.SetDenominatorFiled(_measure.denominator);
-        EditUIManager.Instance.SetNumeratorFiled(_measure.numerator);
+        UIManager.Instance.SetDenominatorFiled(_measure.denominator);
+        UIManager.Instance.SetNumeratorFiled(_measure.numerator);
 
         // 選択中の小節の拍子を変更
         if (-1 < _choosingBarNum)
@@ -94,7 +94,7 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
         else
             _LPB = lpb;
 
-        EditUIManager.Instance.SetLPBField(_LPB);
+        UIManager.Instance.SetLPBField(_LPB);
 
         // 選択中の小節のLPBを変更
         if(-1 < _choosingBarNum)
@@ -116,7 +116,7 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
         else
             _lane = MAX_LANE;
 
-        EditUIManager.Instance.SetLaneField(_lane);
+        UIManager.Instance.SetLaneField(_lane);
     }
 
     public int GetLane()

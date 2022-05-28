@@ -7,9 +7,9 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
     [SerializeField]
     private AudioSource _music = null;
     [SerializeField]
-    private AudioSource _audiosource_1 = null;
+    private AudioSource _seSource_1 = null;
     [SerializeField]
-    private AudioSource audioSource_2 = null;
+    private AudioSource _seSource_2 = null;
     [SerializeField]
     private AudioClip _tapSE = null;
     [SerializeField]
@@ -22,7 +22,7 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
     /// </summary>
     /// <param name="fileName"></param>
     /// <returns></returns>
-    public IEnumerator SetAudioFile(string fileName)
+    public IEnumerator LoadAudioFile(string fileName)
     {
         // ã»ÇÃçƒê∂íÜÇÕèàóùÇµÇ»Ç¢
         if (_music.isPlaying)
@@ -49,6 +49,9 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
                 Debug.LogError("ÉçÅ[Éhé∏îs");
                 yield break;
             }
+
+
+            UIManager.Instance.SetMusicTitle(fileName.Split('.')[0]);
 
             _music.clip = audioClip;
             GameDirector.Instance.SetDuration(_music.clip.length);
@@ -77,11 +80,18 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
 
     public void PlayTapSE()
     {
-        _audiosource_1.PlayOneShot(_tapSE);
+        _seSource_1.PlayOneShot(_tapSE);
     }
 
     public void PlayCompleteSE()
     {
-        audioSource_2.PlayOneShot(_completeSE);
+        _seSource_2.PlayOneShot(_completeSE);
+    }
+
+    public void SetMasterVolume(float val)
+    {
+        _music.volume = val;
+        _seSource_1.volume = val;
+        _seSource_2.volume = val;
     }
 }
