@@ -28,12 +28,12 @@ public class BarManager : SingletonMonoBehaviour<BarManager>
     //    barList[bar.barNum] = bar;
     //}
 
-    public void RemoveBarList(int idx)
-    {
-        barList.RemoveAt(idx);
+    //public void RemoveBarList(int idx)
+    //{
+    //    barList.RemoveAt(idx);
 
-        // TODO:barnumの修正
-    }
+    //    // TODO:barnumの修正
+    //}
 
 
     public void AddNotes(int lane, int cell, int type)
@@ -45,9 +45,28 @@ public class BarManager : SingletonMonoBehaviour<BarManager>
             barList[DataManager.Instance.GetChoosingBarNum()].notesArray[lane, cell].notesType = 0;
     }
 
+    /// <summary>
+    /// laneを変更した際、最大レーンを超えたレーンに存在するノーツを消す
+    /// </summary>
+    /// <param name="maxLane"></param>
+    public void ClearLaneNotes(int maxLane)
+    {
+        foreach(Notes.Bar bar in barList)
+        {
+            for(int i = maxLane; i < DataManager.MAX_LANE; i++)
+            {
+                // UnityEngine.Debug.Log("deleteLane" + i);
+                for (int j = 0; j < DataManager.Instance.GetLPB(); j++)
+                {
+                    bar.notesArray[i, j].notesType = 0;
+                    // TODO:ロングノーツ実装後は子ノーツも消す
+                }
+            }
+        }
+    }
 
     /// <summary>
-    /// LPBを変更した際に既に配置してあるノーツを変更後のLPBに沿って再配置する
+    /// LPBを変更した際、既に配置してあるノーツを変更後のLPBに沿って再配置する
     /// </summary>
     public void SetNotesIndex(Notes.Bar bar, int changedLPB)
     {

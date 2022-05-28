@@ -27,22 +27,22 @@ public class NotesManager : SingletonMonoBehaviour<NotesManager>
         {
             for (int i = 0; i < barData.LPB; i++)
             {
-                // 1拍の長さを計算
-                // TODO:オフセットなどを考慮
-                float length = 60 / DataManager.Instance.GetBPM() * 4 * barData.measure.numerator / barData.measure.denominator / barData.LPB;
                 // 計算後のデータを代入
                 Notes.Note note = BarManager.Instance.barList[barData.barNum].notesArray[lane, i];
+                // 1拍の長さを計算
+                // TODO:ノーツに設定されたオフセットなどを考慮
+                float length = 60 / DataManager.Instance.GetBPM() * 4 * barData.measure.numerator / barData.measure.denominator / barData.LPB;
                 //
-                note.lane = lane;
-                //
+                note.length = length;
+                // これまでの経過時間
                 note.time = DataManager.Instance.GetOffset() + totalTime;
                 // 何フレーム目にくるかを計算
                 double frame = System.Math.Round(note.time / (1f / DataManager.Instance.GetTargetFrameRate()), System.MidpointRounding.AwayFromZero);
                 note.frame = (int)frame;
                 //UnityEngine.Debug.Log(note.time + "_" + frame);
                 //
-                note.length = length;
-                //
+                note.lane = lane;
+                // 元データに反映
                 BarManager.Instance.barList[barData.barNum].notesArray[lane, i] = note;
                 //
                 totalTime += length;

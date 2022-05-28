@@ -126,7 +126,7 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     public void OnChangedDenominatorField()
     {
         if (_denominatorField.text != string.Empty)
-            DataManager.Instance.SetMeasure(int.Parse(_numeratorField.text), -1);
+            DataManager.Instance.SetMeasure(int.Parse(_denominatorField.text), DataManager.Instance.GetMeasure().numerator);
         else
             SetDenominatorFiled(DataManager.Instance.GetMeasure().denominator);
     }
@@ -146,7 +146,7 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     public void OnChangedNumeratorField()
     {
         if (_numeratorField.text != string.Empty)
-            DataManager.Instance.SetMeasure(-1, int.Parse(_numeratorField.text));
+            DataManager.Instance.SetMeasure(DataManager.Instance.GetMeasure().denominator, int.Parse(_numeratorField.text));
         else
             SetNumeratorFiled(DataManager.Instance.GetMeasure().numerator);
     }
@@ -279,5 +279,3 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
         Application.Quit();
     }
 }
-
-// lane •ÏX‚µ‚½Û‚Ì•Ï‰»
