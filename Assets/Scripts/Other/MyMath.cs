@@ -10,7 +10,7 @@ public class MyMath
         return b == 0 ? a : GcdRecursive(b, a % b);
     }
 
-    public static int Clapm(int val, int max, int min)
+    public static int Clamp(int val, int max, int min)
     {
 
         if (max < val)
@@ -21,7 +21,7 @@ public class MyMath
         return val;
     }
 
-    public static float Clapm(float val, float max, float min)
+    public static float Clamp(float val, float max, float min)
     {
 
         if (max < val)

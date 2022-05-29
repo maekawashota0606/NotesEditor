@@ -45,7 +45,7 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
 
     public void SetBPM(float bpm)
     {
-        _BPM = MyMath.Clapm(bpm, MAX_BPM, 1);
+        _BPM = MyMath.Clamp(bpm, MAX_BPM, 1);
 
         UIManager.Instance.SetBPMField(_BPM);
     }
@@ -68,8 +68,8 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
 
     public void SetMeasure(int d, int n)
     {
-        _measure.denominator = MyMath.Clapm(d, 16, 1);
-        _measure.numerator = MyMath.Clapm(n, 16, 1);
+        _measure.denominator = MyMath.Clamp(d, 16, 1);
+        _measure.numerator = MyMath.Clamp(n, 16, 1);
 
         UIManager.Instance.SetDenominatorFiled(_measure.denominator);
         UIManager.Instance.SetNumeratorFiled(_measure.numerator);
@@ -86,7 +86,7 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
 
     public void SetLPB(int lpb)
     {
-        _LPB = MyMath.Clapm(lpb, MAX_LPB, 4);
+        _LPB = MyMath.Clamp(lpb, MAX_LPB, 4);
 
         UIManager.Instance.SetLPBField(_LPB);
 
@@ -105,7 +105,7 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
 
     public void SetLane(int lane)
     {
-        lane = MyMath.Clapm(lane, MAX_LANE, 1);
+        lane = MyMath.Clamp(lane, MAX_LANE, 1);
 
         // ÉåÅ[ÉìÇå∏ÇÁÇµÇΩèÍçá
         if (lane < _lane)
@@ -131,8 +131,8 @@ public class DataManager : SingletonMonoBehaviour<DataManager>
         if ( _choosingBarNum < 0)
             return;
 
-        SetLPB(BarManager.Instance.barList[_choosingBarNum].LPB);
         SetMeasure(BarManager.Instance.barList[_choosingBarNum].measure.denominator, BarManager.Instance.barList[_choosingBarNum].measure.numerator);
+        SetLPB(BarManager.Instance.barList[_choosingBarNum].LPB);
     }
 
     public int GetChoosingBarNum()
